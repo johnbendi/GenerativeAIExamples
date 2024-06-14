@@ -24,7 +24,7 @@ import yaml
 
 class NvidiaLLM:
     def __init__(self, model_name):
-        self.llm = ChatNVIDIA(model=model_name)
+        self.llm = ChatNVIDIA(model=model_name,  max_tokens = 4000)
 
 class NimLLM:
     def __init__(self, model_name):

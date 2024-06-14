@@ -59,7 +59,7 @@ def get_relevant_docs(DOCS_DIR, text, limit=None):
 
     else:
         # Embeddings with NVIDIA AI Foundation Endpoints
-        nv_embedder = NVIDIAEmbeddings(model="ai-embed-qa-4")
+        nv_embedder = NVIDIAEmbeddings(model=yaml.safe_load(open('config.yaml', 'r'))['embedding_model'])
 
     vectorstore = FAISS.load_local(os.path.join(DOCS_DIR, "vectorstore_nv"), nv_embedder, allow_dangerous_deserialization=True)
     retriever = vectorstore.as_retriever(search_type="similarity_score_threshold",

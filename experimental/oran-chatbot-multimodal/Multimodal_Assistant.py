@@ -53,7 +53,6 @@ else:
     args.rag_type = 1
 rag_type = args.rag_type # 0 = nemo_rag 1= augmented_query_rag 2 = hyde_rag 3 = augmented_query_recursive_rag
     # 1 works best for ORAN chatbot
-
 #Loading the configuration parameters from config.yaml
 config_yaml_path = 'config.yaml'
 config_yaml = None
@@ -73,7 +72,7 @@ if NIM_FLAG==True:
     llm_client = LLMClient(config_yaml['nim_model_name'], "NIM")
     print("Initialized NIM LLM")
 else:
-    llm_client = LLMClient("mixtral_8x7b")
+    llm_client = LLMClient(config_yaml['llm_model'])
     print("Initialized NVAIF for LLM")
 
 NREM_FLAG = False
@@ -87,7 +86,7 @@ else:
 
 
 # A few RAG pipeline definitions 
-def nemo_rag(config, query, retrieved_documents, model="playground_llama2_70b"):
+def nemo_rag(config, query, retrieved_documents, model="meta/llama2-70b"):
     #Combine the query and retrieved documents and send to model
     # llm = ChatNVIDIA(model=model)
     if NIM_FLAG==True:
@@ -107,7 +106,7 @@ def nemo_rag(config, query, retrieved_documents, model="playground_llama2_70b"):
     final_ans = full_response
     return final_ans
 
-def augment_multiple_query(query, model="playground_llama2_70b"):
+def augment_multiple_query(query, model="meta/llama2-70b"):
     #For the given query, lets create 5 additional queries using the LLM
     if NIM_FLAG==True:
         print("Augmentating multiple query with NIM LLM")
@@ -128,7 +127,7 @@ def augment_multiple_query(query, model="playground_llama2_70b"):
     final_ans = [ans for ans in final_ans if len(ans)!=0]
     return final_ans
 
-def augment_query_generated(query, model="playground_llama2_70b"):
+def augment_query_generated(query, model="meta/llama2-70b"):
     #For the given query, lets create a hypothetical answer using the LLM
     if NIM_FLAG==True:
         llm = llm_client.llm
@@ -145,7 +144,7 @@ def augment_query_generated(query, model="playground_llama2_70b"):
     final_ans = full_response
     return final_ans
 
-def query_rewriting(query, history, model="playground_llama2_70b"):
+def query_rewriting(query, history, model="meta/llama2-70b"):
     #Rewrite the given query using the context from LLM
     if NIM_FLAG==True:
         llm = llm_client.llm
